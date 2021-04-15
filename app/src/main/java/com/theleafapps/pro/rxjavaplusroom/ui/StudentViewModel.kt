@@ -21,13 +21,23 @@ class StudentViewModel(application: Application): AndroidViewModel(application) 
     private val studentRepository = StudentRepository(DBService.getInstance(application))
     private val compositeDisposable = CompositeDisposable()
 
-
+    private val isLoading: MutableLiveData<Boolean> = MutableLiveData()
+    private val isError: MutableLiveData<String> = MutableLiveData()
+    private val isSuccess: MutableLiveData<Boolean> = MutableLiveData()
     private val studentId: MutableLiveData<Int> = MutableLiveData()
     private val studentName: MutableLiveData<String> = MutableLiveData()
     private val studentAge: MutableLiveData<Int> = MutableLiveData()
     private val studentSubject: MutableLiveData<String> = MutableLiveData()
+    private val studentList: MutableLiveData<List<StudentEntity>> = MutableLiveData()
+
+    init {
+        getAllStudents()
+    }
 
     fun insert(){
+        // show progress bar
+        isLoading.value = true
+
         compositeDisposable.add(
             studentRepository.insert(createStudentEntity())
                 .subscribeOn(Schedulers.io())
@@ -35,25 +45,95 @@ class StudentViewModel(application: Application): AndroidViewModel(application) 
                 .subscribe(
                     {
                         Log.d(TAG, "Insert : $it")
+                        // hide progressbar
+                        isLoading.value = false
+
+                        // notify success
+                        isSuccess.value = true
                     },
                     {
                         Log.e(TAG, it.toString())
+                        isError.value = it.message
+                        isLoading.value = false
                     }
                 )
         )
     }
 
     fun update(){
+        // show progress bar
+        isLoading.value = true
+
         compositeDisposable.add(
-            studentRepository.update(createStudentEntity())
+            studentRepository.update(createUpdateStudentEntity())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     {
                         Log.d(TAG, "Insert : $it")
+                        // hide progressbar
+                        isLoading.value = false
+
+                        // notify success
+                        isSuccess.value = true
                     },
                     {
                         Log.e(TAG, it.toString())
+                        isLoading.value = false
+                        isError.value = it.message
+                    }
+                )
+        )
+    }
+
+    fun delete(){
+        // show progress bar
+        isLoading.value = true
+
+        compositeDisposable.add(
+            studentRepository.delete(createStudentEntity())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    {
+                        Log.d(TAG, "Delete : $it")
+                        // hide progressbar
+                        isLoading.value = false
+
+                        // notify success
+                        isSuccess.value = true
+                    },
+                    {
+                        Log.e(TAG, it.toString())
+                        isLoading.value = false
+                        isError.value = it.message
+                    }
+                )
+        )
+    }
+
+    private fun getAllStudents(){
+        // show progress bar
+        isLoading.value = true
+
+        compositeDisposable.add(
+            studentRepository.getAllStudent()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    {
+                        Log.d(TAG, "Students : $it")
+                        studentList.value = it
+                        // hide progressbar
+                        isLoading.value = false
+
+                        // notify success
+                        isSuccess.value = true
+                    },
+                    {
+                        Log.e(TAG, it.toString())
+                        isLoading.value = false
+                        isError.value = it.message
                     }
                 )
         )
@@ -61,6 +141,15 @@ class StudentViewModel(application: Application): AndroidViewModel(application) 
 
     private fun createStudentEntity(): StudentEntity {
         return StudentEntity(
+            studentName = studentName.value.toString(),
+            age = studentAge.value!!,
+            subject = studentSubject.value.toString()
+        )
+    }
+
+    private fun createUpdateStudentEntity(): StudentEntity {
+        return StudentEntity(
+            id = studentId.value!!,
             studentName = studentName.value.toString(),
             age = studentAge.value!!,
             subject = studentSubject.value.toString()
