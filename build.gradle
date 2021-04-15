@@ -14,4 +14,5 @@ ext{
     rxjava3_version = "3.1.3"
     rxjava3_rxandroid_version = "3.0.0"
     material_dialog_version = "3.3.0"
+    lifecycle_version = "2.4.0"
 }
