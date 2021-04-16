@@ -4,4 +4,5 @@
     <string name="student_age">Student Age</string>
     <string name="student_subject">Student Subject</string>
     <string name="btn_save">Save</string>
+    <string name="add_student_cd">Add Student</string>
 </resources>
