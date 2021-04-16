@@ -21,14 +21,14 @@ class StudentViewModel(application: Application): AndroidViewModel(application) 
     private val studentRepository = StudentRepository(DBService.getInstance(application))
     private val compositeDisposable = CompositeDisposable()
 
-    private val isLoading: MutableLiveData<Boolean> = MutableLiveData()
-    private val isError: MutableLiveData<String> = MutableLiveData()
-    private val isSuccess: MutableLiveData<Boolean> = MutableLiveData()
+    val isLoading: MutableLiveData<Boolean> = MutableLiveData()
+    val isError: MutableLiveData<String> = MutableLiveData()
+    val isSuccess: MutableLiveData<Boolean> = MutableLiveData()
     private val studentId: MutableLiveData<Int> = MutableLiveData()
     private val studentName: MutableLiveData<String> = MutableLiveData()
     private val studentAge: MutableLiveData<Int> = MutableLiveData()
     private val studentSubject: MutableLiveData<String> = MutableLiveData()
-    private val studentList: MutableLiveData<List<StudentEntity>> = MutableLiveData()
+    val studentList: MutableLiveData<List<StudentEntity>> = MutableLiveData()
 
     init {
         getAllStudents()
