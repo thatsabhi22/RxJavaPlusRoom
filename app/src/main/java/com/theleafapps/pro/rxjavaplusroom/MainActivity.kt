@@ -64,6 +64,13 @@ class MainActivity : AppCompatActivity() {
             val name = customView.findViewById<TextInputEditText>(R.id.studentName)
             val age = customView.findViewById<TextInputEditText>(R.id.studentAge)
             val subject = customView.findViewById<TextInputEditText>(R.id.studentSubject)
+
+            viewModel.studentName.value = name.text.toString()
+            val tempAge = age.text.toString()
+            viewModel.studentAge.value = tempAge.toInt()
+            viewModel.studentSubject.value = subject.text.toString()
+
+            viewModel.insert()
         }
         dialog.negativeButton {
             dialog.dismiss()
