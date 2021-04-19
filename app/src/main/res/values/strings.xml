@@ -5,4 +5,8 @@
     <string name="student_subject">Student Subject</string>
     <string name="btn_save">Save</string>
     <string name="add_student_cd">Add Student</string>
+    <string name="id_placeholder"><![CDATA[<id>]]></string>
+    <string name="name_placeholder"><![CDATA[<name>]]></string>
+    <string name="age_placeholder"><![CDATA[<age>]]></string>
+    <string name="subject_placeholder"><![CDATA[<subject>]]></string>
 </resources>
