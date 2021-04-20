@@ -10,9 +10,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.theleafapps.pro.rxjavaplusroom.R
 import com.theleafapps.pro.rxjavaplusroom.data.local.entity.StudentEntity
 
-class StudentRecyclerAdapter : RecyclerView.Adapter<StudentRecyclerAdapter.StudentViewHolder>() {
+class StudentRecyclerAdapter(private val editClickListener: (data: StudentEntity) -> Unit) :
+    RecyclerView.Adapter<StudentRecyclerAdapter.StudentViewHolder>() {
 
-    private val diffUtil = object : DiffUtil.ItemCallback<StudentEntity>(){
+    private val diffUtil = object : DiffUtil.ItemCallback<StudentEntity>() {
         override fun areItemsTheSame(oldItem: StudentEntity, newItem: StudentEntity): Boolean {
             return oldItem.id == newItem.id
         }
@@ -22,12 +23,12 @@ class StudentRecyclerAdapter : RecyclerView.Adapter<StudentRecyclerAdapter.Stude
         }
     }
 
-    private val asyncListDiffer = AsyncListDiffer(this,diffUtil)
+    private val asyncListDiffer = AsyncListDiffer(this, diffUtil)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StudentViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.student_list_view,parent,false)
-        return StudentViewHolder(view)
+            .inflate(R.layout.student_list_view, parent, false)
+        return StudentViewHolder(view, editClickListener)
     }
 
     override fun onBindViewHolder(holder: StudentViewHolder, position: Int) {
@@ -36,11 +37,14 @@ class StudentRecyclerAdapter : RecyclerView.Adapter<StudentRecyclerAdapter.Stude
 
     override fun getItemCount(): Int = asyncListDiffer.currentList.size
 
-    fun setList(newItem: List<StudentEntity>){
+    fun setList(newItem: List<StudentEntity>) {
         asyncListDiffer.submitList(newItem)
     }
 
-    class StudentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+    class StudentViewHolder(
+        itemView: View,
+        private val editClickListener: (data: StudentEntity) -> Unit
+    ) : RecyclerView.ViewHolder(itemView) {
 
         private val id = itemView.findViewById<TextView>(R.id.std_id)
         private val name = itemView.findViewById<TextView>(R.id.std_name)
@@ -50,14 +54,16 @@ class StudentRecyclerAdapter : RecyclerView.Adapter<StudentRecyclerAdapter.Stude
         private val editBtn = itemView.findViewById<TextView>(R.id.btn_edit)
         private val deleteBtn = itemView.findViewById<TextView>(R.id.btn_delete)
 
-        fun bind(data: StudentEntity){
+        fun bind(data: StudentEntity) {
             id.text = data.id.toString()
             name.text = data.studentName.toString()
             age.text = data.age.toString()
             subject.text = data.subject.toString()
 
-            editBtn.setOnClickListener {  }
-            deleteBtn.setOnClickListener {  }
+            editBtn.setOnClickListener {
+                editClickListener(data)
+            }
+            deleteBtn.setOnClickListener { }
 
         }
     }

@@ -12,6 +12,7 @@ import com.afollestad.materialdialogs.customview.getCustomView
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.textfield.TextInputEditText
+import com.theleafapps.pro.rxjavaplusroom.data.local.entity.StudentEntity
 import com.theleafapps.pro.rxjavaplusroom.ui.StudentViewModel
 import com.theleafapps.pro.rxjavaplusroom.ui.adapter.StudentRecyclerAdapter
 
@@ -26,12 +27,20 @@ class MainActivity : AppCompatActivity() {
         LinearLayoutManager(this)
     }
 
+    private val editClickListener: (data: StudentEntity) -> Unit = {
+        showEditStudentDialog(it)
+    }
+
+    private val deleteClickListener: (data: StudentEntity) -> Unit = {
+
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         studentRecyclerView = findViewById(R.id.student_rv)
-        studentRecyclerAdapter = StudentRecyclerAdapter()
+        studentRecyclerAdapter = StudentRecyclerAdapter(editClickListener)
         addStudentFab = findViewById(R.id.addStudent)
 
         viewModel = ViewModelProvider(
@@ -42,7 +51,7 @@ class MainActivity : AppCompatActivity() {
         observers()
 
         addStudentFab.setOnClickListener{
-            showStudentDialog()
+            showAddStudentDialog()
         }
 
         // RecyclerView
@@ -50,7 +59,6 @@ class MainActivity : AppCompatActivity() {
             adapter = studentRecyclerAdapter
             layoutManager = linearLayoutManager
         }
-
     }
 
     private fun observers(){
@@ -71,7 +79,7 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    private fun showStudentDialog(){
+    private fun showAddStudentDialog(){
         val dialog = MaterialDialog(this)
             .cornerRadius(8f)
             .cancelable(false)
@@ -89,6 +97,39 @@ class MainActivity : AppCompatActivity() {
             viewModel.studentSubject.value = subject.text.toString()
 
             viewModel.insert()
+        }
+        dialog.negativeButton {
+            dialog.dismiss()
+        }
+        dialog.show()
+    }
+
+    private fun showEditStudentDialog(data: StudentEntity){
+        val dialog = MaterialDialog(this)
+            .cornerRadius(8f)
+            .cancelable(false)
+            .customView(R.layout.student_view_dialog)
+
+        val customView = dialog.getCustomView()
+        // get the view
+        val name = customView.findViewById<TextInputEditText>(R.id.studentName)
+        val age = customView.findViewById<TextInputEditText>(R.id.studentAge)
+        val subject = customView.findViewById<TextInputEditText>(R.id.studentSubject)
+
+        // set the value
+        name.setText(data.studentName)
+        age.setText(data.age.toString())
+        subject.setText(data.subject)
+
+        viewModel.studentId.value = data.id
+
+        dialog.positiveButton {
+            viewModel.studentName.value = name.text.toString()
+            val tempAge = age.text.toString()
+            viewModel.studentAge.value = tempAge.toInt()
+            viewModel.studentSubject.value = subject.text.toString()
+
+            viewModel.update()
         }
         dialog.negativeButton {
             dialog.dismiss()

@@ -70,7 +70,7 @@ class StudentViewModel(application: Application): AndroidViewModel(application) 
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     {
-                        Log.d(TAG, "Insert : $it")
+                        Log.d(TAG, "Update : $it")
                         // hide progressbar
                         isLoading.value = false
 
