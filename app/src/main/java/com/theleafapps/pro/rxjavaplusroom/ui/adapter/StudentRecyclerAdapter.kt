@@ -47,11 +47,18 @@ class StudentRecyclerAdapter : RecyclerView.Adapter<StudentRecyclerAdapter.Stude
         private val age = itemView.findViewById<TextView>(R.id.std_age)
         private val subject = itemView.findViewById<TextView>(R.id.std_subject)
 
+        private val editBtn = itemView.findViewById<TextView>(R.id.btn_edit)
+        private val deleteBtn = itemView.findViewById<TextView>(R.id.btn_delete)
+
         fun bind(data: StudentEntity){
             id.text = data.id.toString()
             name.text = data.studentName.toString()
             age.text = data.age.toString()
             subject.text = data.subject.toString()
+
+            editBtn.setOnClickListener {  }
+            deleteBtn.setOnClickListener {  }
+
         }
     }
 }
