@@ -81,6 +81,10 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.studentList.observe(this, Observer {
             studentRecyclerAdapter.setList(it)
+
+            studentRecyclerView.post {
+                studentRecyclerView.scrollToPosition(0)
+            }
         })
     }
 
@@ -91,17 +95,19 @@ class MainActivity : AppCompatActivity() {
             .customView(R.layout.student_view_dialog)
 
         val customView = dialog.getCustomView()
+        val delete_conf_text = customView.findViewById<TextView>(R.id.delete_std_conf_tv)
+        delete_conf_text.visibility = View.GONE
+
         dialog.positiveButton {
             val name = customView.findViewById<TextInputEditText>(R.id.studentName)
             val age = customView.findViewById<TextInputEditText>(R.id.studentAge)
             val subject = customView.findViewById<TextInputEditText>(R.id.studentSubject)
-            val delete_conf_text = customView.findViewById<TextView>(R.id.delete_std_conf_tv)
+
 
             viewModel.studentName.value = name.text.toString()
             val tempAge = age.text.toString()
             viewModel.studentAge.value = tempAge.toInt()
             viewModel.studentSubject.value = subject.text.toString()
-            delete_conf_text.visibility = View.GONE
 
             viewModel.insert()
         }

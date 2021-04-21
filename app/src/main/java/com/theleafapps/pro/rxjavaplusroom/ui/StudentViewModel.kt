@@ -163,4 +163,9 @@ class StudentViewModel(application: Application): AndroidViewModel(application) 
             subject = studentSubject.value.toString()
         )
     }
+
+    override fun onCleared() {
+        super.onCleared()
+        compositeDisposable.clear()
+    }
 }
