@@ -11,4 +11,5 @@
     <string name="subject_placeholder"><![CDATA[<subject>]]></string>
     <string name="btn_edit_text">Edit</string>
     <string name="btn_delete_text">Delete</string>
+    <string name="delete_student_confirmation_text">You Sure !!</string>
 </resources>

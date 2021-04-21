@@ -89,9 +89,8 @@ class StudentViewModel(application: Application): AndroidViewModel(application) 
     fun delete(){
         // show progress bar
         isLoading.value = true
-
         compositeDisposable.add(
-            studentRepository.delete(createStudentEntity())
+            studentRepository.delete(createDeleteStudentEntity())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -148,6 +147,15 @@ class StudentViewModel(application: Application): AndroidViewModel(application) 
     }
 
     private fun createUpdateStudentEntity(): StudentEntity {
+        return StudentEntity(
+            id = studentId.value!!,
+            studentName = studentName.value.toString(),
+            age = studentAge.value!!,
+            subject = studentSubject.value.toString()
+        )
+    }
+
+    private fun createDeleteStudentEntity(): StudentEntity {
         return StudentEntity(
             id = studentId.value!!,
             studentName = studentName.value.toString(),

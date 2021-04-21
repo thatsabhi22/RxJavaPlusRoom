@@ -10,7 +10,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.theleafapps.pro.rxjavaplusroom.R
 import com.theleafapps.pro.rxjavaplusroom.data.local.entity.StudentEntity
 
-class StudentRecyclerAdapter(private val editClickListener: (data: StudentEntity) -> Unit) :
+class StudentRecyclerAdapter(
+    private val editClickListener: (data: StudentEntity) -> Unit,
+    private val deleteClickListener: (data: StudentEntity) -> Unit
+) :
     RecyclerView.Adapter<StudentRecyclerAdapter.StudentViewHolder>() {
 
     private val diffUtil = object : DiffUtil.ItemCallback<StudentEntity>() {
@@ -28,7 +31,7 @@ class StudentRecyclerAdapter(private val editClickListener: (data: StudentEntity
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StudentViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.student_list_view, parent, false)
-        return StudentViewHolder(view, editClickListener)
+        return StudentViewHolder(view, editClickListener,deleteClickListener)
     }
 
     override fun onBindViewHolder(holder: StudentViewHolder, position: Int) {
@@ -43,7 +46,8 @@ class StudentRecyclerAdapter(private val editClickListener: (data: StudentEntity
 
     class StudentViewHolder(
         itemView: View,
-        private val editClickListener: (data: StudentEntity) -> Unit
+        private val editClickListener: (data: StudentEntity) -> Unit,
+        private val deleteClickListener: (data: StudentEntity) -> Unit
     ) : RecyclerView.ViewHolder(itemView) {
 
         private val id = itemView.findViewById<TextView>(R.id.std_id)
@@ -63,8 +67,9 @@ class StudentRecyclerAdapter(private val editClickListener: (data: StudentEntity
             editBtn.setOnClickListener {
                 editClickListener(data)
             }
-            deleteBtn.setOnClickListener { }
-
+            deleteBtn.setOnClickListener {
+                deleteClickListener(data)
+            }
         }
     }
 }
