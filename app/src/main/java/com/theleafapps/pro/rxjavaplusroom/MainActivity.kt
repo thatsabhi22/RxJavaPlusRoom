@@ -2,6 +2,7 @@ package com.theleafapps.pro.rxjavaplusroom
 
 import android.os.Bundle
 import android.view.View
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -23,6 +24,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var addStudentFab: FloatingActionButton
     private lateinit var studentRecyclerAdapter: StudentRecyclerAdapter
     private lateinit var studentRecyclerView: RecyclerView
+    private lateinit var studentProgressBar: ProgressBar
 
     private val linearLayoutManager: LinearLayoutManager by lazy {
         LinearLayoutManager(this)
@@ -40,6 +42,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        studentProgressBar = findViewById(R.id.pbStudent)
         studentRecyclerView = findViewById(R.id.student_rv)
         studentRecyclerAdapter = StudentRecyclerAdapter(editClickListener, deleteClickListener)
         addStudentFab = findViewById(R.id.addStudent)
@@ -65,7 +68,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun observers() {
         viewModel.isLoading.observe(this, Observer {
-
+            studentProgressBar.visibility = if(it) View.VISIBLE else View.GONE
         })
 
         viewModel.isSuccess.observe(this, Observer {
