@@ -1,10 +1,13 @@
 package com.theleafapps.pro.rxjavaplusroom
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,6 +28,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var studentRecyclerAdapter: StudentRecyclerAdapter
     private lateinit var studentRecyclerView: RecyclerView
     private lateinit var studentProgressBar: ProgressBar
+    private lateinit var studentSearchView: SearchView
 
     private val linearLayoutManager: LinearLayoutManager by lazy {
         LinearLayoutManager(this)
@@ -189,5 +193,15 @@ class MainActivity : AppCompatActivity() {
             dialog.dismiss()
         }
         dialog.show()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu,menu)
+        studentSearchView = menu?.findItem(R.id.app_bar_student_search)?.actionView as SearchView
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return super.onOptionsItemSelected(item)
     }
 }
