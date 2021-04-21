@@ -19,4 +19,7 @@ interface StudentDao {
 
     @Query("SELECT * FROM students ORDER BY id DESC")
     fun getAllStudents():Observable<List<StudentEntity>>
+
+    @Query("SELECT * FROM students WHERE student_name LIKE '%'  || :name || '%' ")
+    fun searchStudentByName(name : String):Observable<List<StudentEntity>>
 }

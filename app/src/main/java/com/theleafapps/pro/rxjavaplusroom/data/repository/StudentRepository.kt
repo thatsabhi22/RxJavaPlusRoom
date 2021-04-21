@@ -12,4 +12,6 @@ class StudentRepository(private val dbService: DBService) {
     fun delete(studentEntity: StudentEntity) = dbService.studentDao().delete(studentEntity)
 
     fun getAllStudent() = dbService.studentDao().getAllStudents()
+
+    fun searchStudentByName(name: String) = dbService.studentDao().searchStudentByName(name)
 }

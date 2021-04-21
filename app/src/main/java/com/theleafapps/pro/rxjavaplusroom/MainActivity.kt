@@ -196,9 +196,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        // inflate the menu
         menuInflater.inflate(R.menu.main_menu,menu)
+
+        // init the search view
         studentSearchView = menu?.findItem(R.id.app_bar_student_search)?.actionView as SearchView
+
+        // call the search function
+        searchStudent()
         return super.onCreateOptionsMenu(menu)
+    }
+
+    private fun searchStudent() {
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

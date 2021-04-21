@@ -138,6 +138,33 @@ class StudentViewModel(application: Application): AndroidViewModel(application) 
         )
     }
 
+    fun seachStudentByName(name: String){
+        // show progress bar
+        isLoading.value = true
+
+        compositeDisposable.add(
+            studentRepository.searchStudentByName(name)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    {
+                        Log.d(TAG, "Students : $it")
+                        studentList.value = it
+                        // hide progressbar
+                        isLoading.value = false
+
+                        // notify success
+                        isSuccess.value = true
+                    },
+                    {
+                        Log.e(TAG, it.toString())
+                        isLoading.value = false
+                        isError.value = it.message
+                    }
+                )
+        )
+    }
+
     private fun createStudentEntity(): StudentEntity {
         return StudentEntity(
             studentName = studentName.value.toString(),
