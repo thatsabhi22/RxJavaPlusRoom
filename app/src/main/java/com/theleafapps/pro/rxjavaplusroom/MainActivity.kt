@@ -232,6 +232,7 @@ class MainActivity : AppCompatActivity() {
             })
         }
             .debounce(1000,TimeUnit.MILLISECONDS)
+            .distinctUntilChanged()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
