@@ -24,6 +24,7 @@ import com.theleafapps.pro.rxjavaplusroom.ui.adapter.StudentRecyclerAdapter
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Scheduler
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.schedulers.Schedulers.io
 import java.util.concurrent.TimeUnit
@@ -37,6 +38,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var studentRecyclerView: RecyclerView
     private lateinit var studentProgressBar: ProgressBar
     private lateinit var studentSearchView: SearchView
+
+    private val compositeDisposable = CompositeDisposable()
 
     private val linearLayoutManager: LinearLayoutManager by lazy {
         LinearLayoutManager(this)
@@ -217,6 +220,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun searchStudent() {
 
+        compositeDisposable.add(
         Observable.create<String> { emitter ->
             studentSearchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
                 override fun onQueryTextSubmit(query: String?): Boolean {
@@ -247,9 +251,16 @@ class MainActivity : AppCompatActivity() {
                     Log.d(TAG,"Complete")
                 }
             )
+        )
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onDestroy() {
+        compositeDisposable.clear()
+        Log.d(TAG, "onDestroy: compositeDisposable Cleared")
+        super.onDestroy()
     }
 }
