@@ -14,9 +14,6 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 class StudentViewModel(application: Application): AndroidViewModel(application) {
 
     private val TAG = "StudentViewModel"
-    companion object{
-        private val TAG = "StudentViewModel"
-    }
 
     private val studentRepository = StudentRepository(DBService.getInstance(application))
     private val compositeDisposable = CompositeDisposable()
@@ -138,7 +135,7 @@ class StudentViewModel(application: Application): AndroidViewModel(application) 
         )
     }
 
-    fun seachStudentByName(name: String){
+    fun searchStudentByName(name: String){
         // show progress bar
         isLoading.value = true
 

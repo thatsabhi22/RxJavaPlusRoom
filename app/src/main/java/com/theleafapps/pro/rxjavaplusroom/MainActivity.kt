@@ -1,6 +1,7 @@
 package com.theleafapps.pro.rxjavaplusroom
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -20,9 +21,16 @@ import com.google.android.material.textfield.TextInputEditText
 import com.theleafapps.pro.rxjavaplusroom.data.local.entity.StudentEntity
 import com.theleafapps.pro.rxjavaplusroom.ui.StudentViewModel
 import com.theleafapps.pro.rxjavaplusroom.ui.adapter.StudentRecyclerAdapter
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Scheduler
+import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.rxjava3.schedulers.Schedulers.io
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
 
+    private val TAG = "MainActivity"
     private lateinit var viewModel: StudentViewModel
     private lateinit var addStudentFab: FloatingActionButton
     private lateinit var studentRecyclerAdapter: StudentRecyclerAdapter
@@ -209,6 +217,35 @@ class MainActivity : AppCompatActivity() {
 
     private fun searchStudent() {
 
+        Observable.create<String> { emitter ->
+            studentSearchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    return false
+                }
+
+                override fun onQueryTextChange(newText: String): Boolean {
+                    if(!emitter.isDisposed){
+                        emitter.onNext(newText)
+                    }
+                    return false
+                }
+            })
+        }
+            .debounce(1000,TimeUnit.MILLISECONDS)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                {
+                    Log.d(TAG,"Search: $it")
+                    viewModel.searchStudentByName(it)
+                },
+                {
+                    Log.d(TAG,"Error: $it")
+                },
+                {
+                    Log.d(TAG,"Complete")
+                }
+            )
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
